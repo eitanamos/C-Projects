@@ -1,0 +1,151 @@
+class Battleship{
+    public:
+        int num_of_hits=0, num_of_points=0, num_ships_sunk=0;
+        vector<vector<char>>eitan;
+        vector<string>scheme,guesses, new_scheme, new_guesses;
+
+        Battleship(vector<string>scheme,vector<string>guesses){
+            this->scheme=scheme;
+            this->guesses=guesses;
+        }
+        string to_tuple(int a, int b){
+            return to_string(a)+to_string(b);
+        }
+        string board(){
+
+            for (int i=0;i<5;i++){
+                vector<char>coeitan;
+                for (int j=0;j<5;j++){
+                    coeitan.push_back(' ');
+                }
+                eitan.push_back(coeitan);
+            }
+            map<char, char>convert;
+            convert['A']= '0';
+            convert['B']='1';
+            convert['C']='2';
+            convert['D']='3';
+            convert['E']='4';
+
+            for (int i=0;i<scheme.size();i++){
+                new_scheme.push_back(string(1,convert[scheme[i][0]]) + to_string((scheme[i][1]-'1')));
+            }
+
+
+            for (int i=0;i<eitan.size();i++){
+                for (int j=0;j<eitan[i].size();j++){
+                    for (int k=0;k<new_scheme.size();k++){
+                    if (to_tuple(i,j)==new_scheme[k]){
+                            eitan[i][j]='s';
+                    }
+                    }
+                }
+            }
+
+            for (int i=0;i<guesses.size();i++){
+                new_guesses.push_back(string(1,convert[guesses[i][0]]) + to_string((guesses[i][1]-'1')));
+            }
+
+            for (int i=0;i<eitan.size();i++){
+                for (int j=0;j<eitan[i].size();j++){
+                    for (int k=0;k<new_guesses.size();k++){
+                        if (to_tuple(i,j)==new_guesses[k] ){
+                            if (eitan[i][j]=='s') {
+                                eitan[i][j] = 'X';
+                            }else{
+                                eitan[i][j]='.';
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
+          string d="[\n";
+            for (int i=0;i<eitan.size();i++){
+                for (int j=0;j<eitan[i].size();j++){
+                    if (j==0){
+                        d=d+"["+eitan[i][j]+",";
+                    }else if (j>0 &&j<4){
+                        d=d+eitan[i][j]+",";
+                    }
+                    else if (j==4){
+                        d=d+eitan[i][j]+"]\n";
+                    }
+                }
+            }
+            d=d+"]";
+
+            return d;
+        }
+        int hits(){
+            for (int i=0;i<eitan.size();i++){
+                for (int j=0;j<eitan[i].size();j++){
+                    if (eitan[i][j]=='X'){
+                        num_of_hits=num_of_hits+1;
+                    }
+                }
+            }
+            return num_of_hits;
+        }
+        bool inlis(string a, vector<string>b){
+            cout<<boolalpha;
+            for (int i=0;i<b.size();i++){
+                if (a==b[i]){
+                    return true;
+                }
+            }
+            return false;
+        }
+        int sunk(){
+            int count=0;
+            for (int i=0;i<new_guesses.size();i++){
+                if (((new_guesses[i][0]-'0')-1)>=0 &&((new_guesses[i][0]-'0')-1)<=4){
+                    if (((new_guesses[i][1]-'0')-1)>=0 &&((new_guesses[i][1]-'0')-1)<=4){
+                        if (inlis((to_string(((new_guesses[i][0]-'0')-1)) +to_string(((new_guesses[i][1]-'0')-1))),new_guesses) &&inlis(new_guesses[i], new_scheme) &&inlis((to_string(((new_guesses[i][0]-'0')-1)) +to_string(((new_guesses[i][1]-'0')-1))),new_scheme)){
+                            count=count+1;
+                        }
+                    }
+                    else if (((new_guesses[i][1]-'0')+1)>=0 &&((new_guesses[i][1]-'0')+1)<=4){
+                        if (inlis((to_string(((new_guesses[i][0]-'0')-1)) +to_string(((new_guesses[i][1]-'0')+1))),new_guesses) &&inlis(new_guesses[i], new_scheme) &&inlis((to_string(((new_guesses[i][0]-'0')-1)) +to_string(((new_guesses[i][1]-'0')-1))),new_scheme)){
+                            count=count+1;
+                        }
+
+                    }
+
+                }
+                else if (((new_guesses[i][0]-'0')+1)>=0 &&((new_guesses[i][0]-'0')+1)<=4){
+                    if (((new_guesses[i][1]-'0')-1)>=0 &&((new_guesses[i][1]-'0')-1)<=4){
+                        if (inlis((to_string(((new_guesses[i][0]-'0')+1)) +to_string(((new_guesses[i][1]-'0')-1))),new_guesses) &&inlis(new_guesses[i], new_scheme) &&inlis((to_string(((new_guesses[i][0]-'0')-1)) +to_string(((new_guesses[i][1]-'0')-1))),new_scheme)){
+                            count=count+1;
+                        }
+
+                    }
+                    else if (((new_guesses[i][1]-'0')+1)>=0 &&((new_guesses[i][1]-'0')+1)<=4){
+                        if (inlis((to_string(((new_guesses[i][0]-'0')+1)) +to_string(((new_guesses[i][1]-'0')+1))),new_guesses) &&inlis(new_guesses[i], new_scheme) &&inlis((to_string(((new_guesses[i][0]-'0')-1)) +to_string(((new_guesses[i][1]-'0')-1))),new_scheme)){
+                            count=count+1;
+                        }
+
+                    }
+
+                }
+            }
+            return count;
+        }
+        int points(){
+            return sunk()*2+num_of_hits;
+        }
+    };
+int main(){
+
+Battleship game1({"A1", "C1", "B2", "B3", "D2", "E2", "E4", "E5", "A5"}, {"A1", "B2", "C3", "D4", "E5", "E4"});
+cout<<game1.board()<<endl;
+cout<<game1.hits()<<endl;
+cout<<game1.sunk()<<endl;
+cout<<game1.points()<<endl;
+
+return 0;
+}
+
+
