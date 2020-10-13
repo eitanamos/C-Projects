@@ -1,3 +1,4 @@
+//This program is in C++ Language
 class Battleship{
     public:
         int num_of_hits=0, num_of_points=0, num_ships_sunk=0;
