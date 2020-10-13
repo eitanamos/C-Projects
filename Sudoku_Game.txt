@@ -1,0 +1,104 @@
+class Sudoku{
+    string word;
+    vector<vector<char>>eitan;
+public:
+    Sudoku(string word) {
+    this->word = word;
+    vector<string> coeitan;
+    for (int i = 0; i < word.size(); i = i + 9) {
+        coeitan.push_back(word.substr(i, 9));
+    }
+    for (int i = 0; i < coeitan.size(); i++) {
+        vector<char> yyeitan;
+        for (int j = 0; j < coeitan[i].size(); j++) {
+            yyeitan.push_back(coeitan[i][j]);
+        }
+        eitan.push_back(yyeitan);
+    }
+}
+    string board(){
+    string a= "[";
+    for (int i=0;i<eitan.size();i++){
+        for (int j=0;j<eitan[i].size();j++) {
+            if (j == 0) {
+                a = a + "[" + string(1,eitan[i][j])+",";
+            }else if (j>0 && j<8){
+                a=a+string(1,eitan[i][j])+",";
+            }else if (j==8){
+                if (i==8){
+                    a=a+string(1,eitan[i][j])+"],\n"+"]";
+                }
+                else{
+                a=a+string(1,eitan[i][j])+"],\n";}
+            }
+        }
+}
+return a;
+}
+    string get_row(int n){
+string row = "[";
+for (int i=0;i<eitan[n].size();i++){
+    if (i!=8){
+    row=row+eitan[n][i]+",";}
+    if (i==8){
+        row=row+eitan[n][i]+"]";
+    }
+}
+return row;
+}
+    string get_col(int m){
+        string col = "[";
+        for (int i=0;i<eitan.size();i++) {
+            if (i != 8) {
+                col = col + eitan[i][m] + ",";
+        } if (i==8){
+                col=col+eitan[i][m]+"]";
+            }
+        }
+        return col;
+    }
+
+    string get_sqr(int c, int g=10){
+        string square_eitan="[";
+        int counter=0;
+        while (c>=3){
+            counter=counter+1;
+            c=c-3;
+        }
+        if (g==10){
+            int d=c;
+            d=d%3;
+
+            for (int i=0+3*counter;i<3+3*counter;i++){
+                for (int j=0+3*d;j<3+3*d;j++){
+                    square_eitan= square_eitan+eitan[i][j]+",";
+                }
+            }
+            square_eitan=square_eitan.substr(0,square_eitan.size()-1)+"]";
+            return square_eitan;
+        }
+        else{
+            int also_counter=0;
+            while (g>=3){
+                also_counter=also_counter+1;
+                g=g-3;
+            }
+            for (int i=0+3*counter;i<3+3*counter;i++){
+                for (int j=0+3*also_counter;j<3+3*also_counter;j++){
+                    square_eitan= square_eitan+eitan[i][j]+",";
+                }
+            }
+        }
+
+        square_eitan=square_eitan.substr(0,square_eitan.size()-1)+"]";
+        return square_eitan;
+    }
+
+};
+
+int main(){
+Sudoku game("417950030000000700060007000050009106800600000000003400900005000000430000200701580");
+cout<<game.get_sqr(8,3);
+    return 0;
+}
+
